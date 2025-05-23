@@ -17,29 +17,18 @@ jobs:
           echo "ANYKERNEL_SOURCE=$(cat config.env | grep -w "ANYKERNEL_SOURCE" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
           echo "ANYKERNEL_BRANCH=$(cat config.env | grep -w "ANYKERNEL_BRANCH" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
 
-      - name: Remove unused packages
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: ture
-          android: false
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: true
-          swap-storage: false
-
       - name: Set swap to 10G
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 10
 
-      - name: Pull toolchain
+      - name: Download toolchain
         run: |
-          git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 aarch64-linux-android-4.9
-          git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 arm-linux-androideabi-4.9
+          mkdir aarch64-linux-android-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -RLO && tar -C aarch64-linux-android-4.9/ -xf android-12.1.0_r27.tar.gz
+          mkdir arm-linux-androideabi-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -RLO && tar -C arm-linux-androideabi-4.9/ -xf android-12.1.0_r27.tar.gz
           mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android12L-tests-release/clang-r416183b1.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
 
-      - name: Pull kernel source
+      - name: Clone kernel source
         run: |
           git clone --depth=1 ${{ env.KERNEL_SOURCE }} -b ${{ env.KERNEL_BRANCH }} kernel
 
@@ -64,7 +53,7 @@ jobs:
                                   CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
           cd kernel
           make ${variables} ${{ env.KERNEL_DEFCONFIG }}
-          make -j$(nproc --all) ${variables}
+          make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${variables}
 
       - name: Package kernel
         run: |
@@ -81,9 +70,10 @@ jobs:
           if [ -f out/arch/arm64/boot/dtbo.img ]; then
             cp out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
           fi
+          echo "BUILD_DATE=$(date +%d-%m-%y)" >> $GITHUB_ENV
 
       - name: Upload kernel to artifact
         uses: actions/upload-artifact@v4
         with:
-          name: output_kernel
+          name: Kernel-${{ github.run_number }}x${{ env.BUILD_DATE }}
           path: AnyKernel3/*
