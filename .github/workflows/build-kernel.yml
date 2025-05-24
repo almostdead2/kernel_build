@@ -46,31 +46,32 @@ jobs:
           export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/clang/lib64
           export PATH=$GITHUB_WORKSPACE/clang/bin/:$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/:$PATH
           variables="             ARCH=arm64 \
-                                  O=../out \
+                                  O=out \
                                   ${{ env.ENVIRONMENT_VARIABLES }} \
                                   CLANG_TRIPLE=aarch64-linux-gnu- \
                                   CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android- \
                                   CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
           cd kernel
-          make O=../out clean
-          make O=../out mrproper
+          mkdir -p out
+          make O=out clean
+          make O=out mrproper
           make ${variables} ${{ env.KERNEL_DEFCONFIG }}
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${variables}
 
       - name: Package kernel
         run: |
           git clone --depth=1 ${{ env.ANYKERNEL_SOURCE }} -b ${{ env.ANYKERNEL_BRANCH }} AnyKernel3 && rm -rf AnyKernel3/.git* AnyKernel3/README.md
-          if [[ -f out/arch/arm64/boot/Image.gz-dtb ]]; then
-            cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3/Image.gz-dtb
-          elif [[ -f out/arch/arm64/boot/Image-dtb ]]; then
-            cp out/arch/arm64/boot/Image-dtb AnyKernel3/Image-dtb
-          elif [[ -f out/arch/arm64/boot/Image.gz ]]; then
-            cp out/arch/arm64/boot/Image.gz AnyKernel3/Image.gz
-          elif [[ -f out/arch/arm64/boot/Image ]]; then
-            cp out/arch/arm64/boot/Image AnyKernel3/Image
+          if [[ -f kernel/out/arch/arm64/boot/Image.gz-dtb ]]; then
+            cp kernel/out/arch/arm64/boot/Image.gz-dtb AnyKernel3/Image.gz-dtb
+          elif [[ -f kernel/out/arch/arm64/boot/Image-dtb ]]; then
+            cp kernel/out/arch/arm64/boot/Image-dtb AnyKernel3/Image-dtb
+          elif [[ -f kernel/out/arch/arm64/boot/Image.gz ]]; then
+            cp kernel/out/arch/arm64/boot/Image.gz AnyKernel3/Image.gz
+          elif [[ -f kernel/out/arch/arm64/boot/Image ]]; then
+            cp kernel/out/arch/arm64/boot/Image AnyKernel3/Image
           fi
-          if [ -f out/arch/arm64/boot/dtbo.img ]; then
-            cp out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
+          if [ -f kernel/out/arch/arm64/boot/dtbo.img ]; then
+            cp kernel/out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
           fi
           echo "BUILD_DATE=$(date +%d-%m-%y)" >> $GITHUB_ENV
 
