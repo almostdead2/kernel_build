@@ -45,18 +45,16 @@ jobs:
           export KBUILD_BUILD_USER=$(echo ${{ github.actor }} | tr A-Z a-z)
           export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/clang/lib64
           export PATH=$GITHUB_WORKSPACE/clang/bin/:$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/:$PATH
-          variables="             ARCH=arm64 \
-                                  O=out \
-                                  ${{ env.ENVIRONMENT_VARIABLES }} \
-                                  CLANG_TRIPLE=aarch64-linux-gnu- \
-                                  CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android- \
-                                  CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
+          export ARCH=arm64
+          export CLANG_TRIPLE=aarch64-linux-gnu-
+          export CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android-
+          export CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-
           cd kernel
           mkdir -p out
           make O=out clean
           make O=out mrproper
-          make ${variables} ${{ env.KERNEL_DEFCONFIG }}
-          make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${variables}
+          make O=out ${{ env.KERNEL_DEFCONFIG }}
+          make O=out -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${{ env.ENVIRONMENT_VARIABLES }}
 
       - name: Package kernel
         run: |
