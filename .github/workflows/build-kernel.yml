@@ -56,9 +56,9 @@ jobs:
           make O=out ${{ env.ENVIRONMENT_VARIABLES }} ${{ env.KERNEL_DEFCONFIG }}
           make O=out -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${{ env.ENVIRONMENT_VARIABLES }}
 
-      - name: Package kernel
+      - name: Package Anykernel3
         run: |
-          git clone --depth=1 ${{ env.ANYKERNEL_SOURCE }} -b ${{ env.ANYKERNEL_BRANCH }} AnyKernel3 && rm -rf AnyKernel3/.git* AnyKernel3/README.md
+          git clone --depth=1 ${{ env.ANYKERNEL_SOURCE }} -b ${{ env.ANYKERNEL_BRANCH }} AnyKernel3 && rm -rf AnyKernel3/.git AnyKernel3/.github AnyKernel3/README.md
           if [[ -f kernel/out/arch/arm64/boot/Image.gz-dtb ]]; then
             cp kernel/out/arch/arm64/boot/Image.gz-dtb AnyKernel3/Image.gz-dtb
           elif [[ -f kernel/out/arch/arm64/boot/Image-dtb ]]; then
