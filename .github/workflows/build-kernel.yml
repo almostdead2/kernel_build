@@ -44,7 +44,7 @@ jobs:
           export KBUILD_BUILD_HOST=Github-Action
           export KBUILD_BUILD_USER=$(echo ${{ github.actor }} | tr A-Z a-z)
           export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/clang/lib64
-          export PATH=$GITHUB_WORKSPACE/clang/bin/:$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/:$PATH
+          export PATH=$GITHUB_WORKSPACE/clang/bin:$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin:$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin:$PATH
           export ARCH=arm64
           export CLANG_TRIPLE=aarch64-linux-gnu-
           export CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android-
