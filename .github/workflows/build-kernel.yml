@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir aarch64-linux-android-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -RLO && tar -C aarch64-linux-android-4.9/ -xf android-10.0.0_r47.tar.gz
           mkdir arm-linux-androideabi-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -RLO && tar -C arm-linux-androideabi-4.9/ -xf android-10.0.0_r47.tar.gz
-          mkdir clang && curl https://github.com/almostdead3/proton-clang-build/releases/download/llvm-toolchain-2026.05.23-15/llvm-toolchain-2026.05.23.tar.xz -RLO && tar -C clang/ --strip-components=1 -xf llvm-toolchain-*.tar.xz
+          mkdir clang && curl https://github.com/almostdead3/proton-clang-build/releases/download/llvm-toolchain-2026.05.23-17/llvm-toolchain-2026.05.23.tar.xz -RLO && tar -C clang/ --strip-components=1 -xf llvm-toolchain-*.tar.xz
 
       - name: Clone kernel source
         run: |
