@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir aarch64-linux-android-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -RLO && tar -C aarch64-linux-android-4.9/ -xf android-10.0.0_r47.tar.gz
           mkdir arm-linux-androideabi-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -RLO && tar -C arm-linux-androideabi-4.9/ -xf android-10.0.0_r47.tar.gz
-          mkdir clang && curl https://github.com/ZyCromerZ/Clang/releases/download/16.0.6-20260510-release/Clang-16.0.6-20260510.tar.gz -RLO && tar -C clang/ -xf Clang-*.tar.gz
+          mkdir clang && curl https://github.com/ZyCromerZ/Clang/releases/download/14.0.6-20250704-release/Clang-14.0.6-20250704.tar.gz -RLO && tar -C clang/ -xf Clang-*.tar.gz
 
       - name: Clone kernel source
         run: |
