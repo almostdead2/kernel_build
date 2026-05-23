@@ -28,6 +28,17 @@ jobs:
           mkdir arm-linux-androideabi-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -RLO && tar -C arm-linux-androideabi-4.9/ -xf android-10.0.0_r47.tar.gz
           mkdir clang && curl https://github.com/almostdead3/proton-clang-build/releases/download/llvm-toolchain-2025.06.04-1/llvm-toolchain-2025.06.04.tar.xz -RLO && tar -C clang/ --strip-components=1 -xf llvm-toolchain-*.tar.xz
 
+      - name: Verify LLVMgold.so Presence
+        run: |
+          GOLD_PLUGIN_PATH=$(find $GITHUB_WORKSPACE/clang -name "LLVMgold.so" | head -n 1)
+          
+          if [ -n "$GOLD_PLUGIN_PATH" ]; then
+            echo "$GOLD_PLUGIN_PATH"
+          else
+            echo "not found"
+            exit 1
+          fi
+
       - name: Clone kernel source
         run: |
           git clone --depth=1 ${{ env.KERNEL_SOURCE }} -b ${{ env.KERNEL_BRANCH }} kernel
