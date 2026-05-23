@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - name: Setup environment
         run: |
           echo "KERNEL_SOURCE=$(cat config.env | grep -w "KERNEL_SOURCE" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
@@ -27,27 +26,7 @@ jobs:
         run: |
           mkdir aarch64-linux-android-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -RLO && tar -C aarch64-linux-android-4.9/ -xf android-10.0.0_r47.tar.gz
           mkdir arm-linux-androideabi-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -RLO && tar -C arm-linux-androideabi-4.9/ -xf android-10.0.0_r47.tar.gz
-          mkdir clang && curl https://github.com/almostdead3/proton-clang-build/releases/download/llvm-toolchain-2025.06.04-1/llvm-toolchain-2025.06.04.tar.xz -RLO && tar -C clang/ --strip-components=1 -xf llvm-toolchain-*.tar.xz
-
-      - name: Setup LLVMgold Plugin
-        run: |
-          GOLD_PATH=$(find $GITHUB_WORKSPACE/clang -name "LLVMgold.so" | head -n 1)
-
-          if [ -n "$GOLD_PATH" ]; then
-            echo "successfully found! Path: $GOLD_PATH"
-          else
-            echo "not found"
-            exit 1
-          fi
-
-          mkdir -p $GITHUB_WORKSPACE/aarch64-linux-android-4.9/lib/bfd-plugins
-          cp "$GOLD_PATH" $GITHUB_WORKSPACE/aarch64-linux-android-4.9/lib/bfd-plugins/
-
-          if [ -d "$GITHUB_WORKSPACE/clang/lib64" ]; then
-            echo "lib64 folder available! Copying to lib64 target..."
-            mkdir -p $GITHUB_WORKSPACE/aarch64-linux-android-4.9/lib64/bfd-plugins
-            cp "$GOLD_PATH" $GITHUB_WORKSPACE/aarch64-linux-android-4.9/lib64/bfd-plugins/
-          fi
+          mkdir clang && curl https://github.com/ZyCromerZ/Clang/releases/download/13.0.1-20230207-release/Clang-13.0.1-20230207.tar.gz -RLO && tar -C clang/ -xf Clang-*.tar.gz
 
       - name: Clone kernel source
         run: |
