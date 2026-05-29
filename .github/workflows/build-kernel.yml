@@ -26,8 +26,7 @@ jobs:
         run: |
           mkdir aarch64-linux-android-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -RLO && tar -C aarch64-linux-android-4.9/ -xf android-10.0.0_r47.tar.gz
           mkdir arm-linux-androideabi-4.9 && curl https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-10.0.0_r47.tar.gz -RLO && tar -C arm-linux-androideabi-4.9/ -xf android-10.0.0_r47.tar.gz
-          mkdir clang && curl https://github.com/kdrag0n/proton-clang-build/releases/download/20191109/proton_clang-10.0.0-20191109.tar.zst -RLO && tar -C clang/ --strip-components=1 -xf proton_clang-*.tar.zst
-
+          mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android11-release/clang-r383902b.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
       - name: Clone kernel source
         run: |
           git clone --depth=1 ${{ env.KERNEL_SOURCE }} -b ${{ env.KERNEL_BRANCH }} kernel
