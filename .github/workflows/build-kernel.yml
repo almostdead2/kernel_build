@@ -42,7 +42,7 @@ jobs:
         run: |
           export KBUILD_BUILD_HOST=Github-Action
           export KBUILD_BUILD_USER=$(echo ${{ github.actor }} | tr A-Z a-z)
-          export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/clang/lib:$LD_LIBRARY_PATH
+          export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/clang/lib64:$LD_LIBRARY_PATH
           export PATH=$GITHUB_WORKSPACE/clang/bin:$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin:$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin:$PATH
           export ARCH=arm64
           export SUBARCH=arm64
