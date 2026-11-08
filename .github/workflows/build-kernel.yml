@@ -5,9 +5,9 @@ on:
 
 jobs:
   build-kernel:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup environment
         run: |
           echo "KERNEL_SOURCE=$(cat config.env | grep -w "KERNEL_SOURCE" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
@@ -38,6 +38,11 @@ jobs:
           curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
           KSU_VERSION=$(cd KernelSU && expr $(/usr/bin/git rev-list --count HEAD) + 10200)
           echo "UPLOADNAME=-KernelSU_$KSU_VERSION" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison flex libssl-dev libelf-dev cpio python3 python-is-python3
 
       - name: Build kernel
         run: |
@@ -76,7 +81,7 @@ jobs:
           echo "BUILD_DATE=$(date +%d-%m-%y)" >> $GITHUB_ENV
 
       - name: Upload kernel to artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Kernel-${{ github.run_number }}x${{ env.BUILD_DATE }}
           path: AnyKernel3/*
