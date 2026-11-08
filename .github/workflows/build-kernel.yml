@@ -55,8 +55,8 @@ jobs:
           mkdir -p out
           make O=out clean
           make O=out mrproper
-          make O=out ${{ env.KERNEL_DEFCONFIG }}
-          make O=out -j$(nproc --all) ${{ env.ENVIRONMENT_VARIABLES }}
+          make O=out ${{ env.ENVIRONMENT_VARIABLES }} ${{ env.KERNEL_DEFCONFIG }}   # ← changed
+          make O=out ${{ env.ENVIRONMENT_VARIABLES }} -j$(nproc --all)
 
       - name: Package Anykernel3
         run: |
